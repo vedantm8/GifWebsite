@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite characters</title>
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Character Search</h1>
+
+    <!-- This is the div to create a button -->
+    <div id="buttons-view"></div>
+
+    <!-- This allows the button to have words inside and to register that it has been selected.  -->
+    <form id="character-form">
+      <!-- Words before the button:  -->
+      <label for="character-input">Add a character</label>
+      <input type="text" id="character-input">
+      <br>
+
+      <!-- This basically tells the button to acknowledge that it has been pressed and has the words inside the button -->
+      <input id="add-character" type="submit" value="Add a character">
+    </form>
+
+    <!-- This is were we initialize everything and get the program started like having the character array and having the jQuery CDN file here, etc. -->
+    <div id="characters-view"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+      // Array of characters that will be written out by those using the website
+      //Instead of using variable topics, I decided to use variable characters. 
+      var characters = [];
+
+      // This makes the page dynamic by allowing the website to state to update itself. 
+      function displaycharacterInfo() {
+
+        var character = $(this).attr("data-person");
+        //console.log(character);
+        
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=hzRKbzlnVxEBc55O441l74nT3BqCTqw9&limit=10";
+        //console.log(queryURL);
+
+        // I was able to get the gifs to show within the console itself, but was not able to get the gifs to show on screen.
+        //queryURL.done(function (data) { console.log("success got data", data); });
+
+        // Ajax call quoting the URL 
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function (response) {
+          console.log(response);
+          // This div holds the character traits. 
+          var newDiv = $("<div>");
+          for (i = 0; i < response.data.length; i++){
+            var newImage = $('<img>' + response.data[i].images + '</img>');
+            var rating = $("<p>Rating: " + response.data[i].rating + "</p>");
+          }
+
+          // This appends the rating to the variable 'newDiv' that we have just created. 
+          newDiv.append(rating);
+
+          // This gives priority appending to the newDiv into the ID 'character-view'. 
+          $("#characters-view").prepend(newDiv);
+
+        });
+
+      }
+
+      // renderButtons function 
+      function renderButtons() {
+
+        //This empties the buttons. 
+        $("#buttons-view").empty();
+        // Loops through the characters 
+        for (var i = 0; i < characters.length; i++) {
+
+          //This basically is storing the button div into the variable 'a'. Also, this allows us to refrain from having to use $ to call for jquery multiple times. 
+          var a = $("<button>");
+          // We are creating a class within the variable a called 'character'
+          a.addClass("character");
+          // Created an attribute for variable a that's called 'data-person'
+          a.attr("data-person", characters[i]);
+          // The text of whatever is stored in the character's length will be shown to the user. 
+          a.text(characters[i]);
+          // Appended the variable a, which is a button div to the buttons-view ID. 
+          $("#buttons-view").append(a);
+
+          // This div creates an html class caled item that will store the gif.
+          var gifDiv = $("<div class='item'>");
+
+          // This creates the type of HTML element that the gif is. 
+          var characterImage = $('<img>');
+
+          // This give priority appending of the characterimage variable to the the gifDiv variable which will in turn go to the HTML class being created there. 
+          gifDiv.prepend(characterImage);
+
+          $('#characters-view').prepend(gifDiv);
+        }
+      }
+
+      // This adds a new character when something is clicked. 
+      $("#add-character").on("click", function (event) {
+
+        // This stops the page from reloading when the 'add character' button is clicked
+        event.preventDefault();
+
+        // We are creating a variable to store the value of the character input. 
+        var character = $("#character-input").val().trim();
+
+        // We are putting the character name into the character array that we set up beforehand. 
+        characters.push(character);
+
+        // This runs the renderbuttons function.  
+        renderButtons();
+      });
+      // This makes sure that the chracterinfo will run. 
+      $(document).on("click", ".character", displaycharacterInfo);
+
+      // This runs the renderbuttons function. 
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
