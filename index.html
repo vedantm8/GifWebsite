@@ -42,7 +42,7 @@
 
         var character = $(this).attr("data-person");
         //console.log(character);
-        
+
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=hzRKbzlnVxEBc55O441l74nT3BqCTqw9&limit=10";
         //console.log(queryURL);
 
@@ -57,16 +57,35 @@
           console.log(response);
           // This div holds the character traits. 
           var newDiv = $("<div>");
-          for (i = 0; i < response.data.length; i++){
-            var newImage = $('<img>' + response.data[i].images + '</img>');
+          for (i = 0; i < response.data.length; i++) {
+            var newImage = $('<img>');
+            newImage.attr('src', response.data[i].images.fixed_height + '</img>')
             var rating = $("<p>Rating: " + response.data[i].rating + "</p>");
           }
 
           // This appends the rating to the variable 'newDiv' that we have just created. 
           newDiv.append(rating);
+          //This appends the picture to the variable 'newDiv'
+          newDiv.append(newImage);
 
           // This gives priority appending to the newDiv into the ID 'character-view'. 
           $("#characters-view").prepend(newDiv);
+
+          $('.gif').on('click', function(){
+          //Variable to find out the state of the gif
+          var state = $(this).attr('imageState');
+
+          //If the state is still, you will animate the gif
+          if (state === 'still') {
+            $(this).attr('src', $(this).attr('response.data[i].images.fixed_height'));
+            $(this).attr('imageState', 'animate');
+          }
+          //If the state is animated, the gif will become still. 
+          else if (state === 'animate') {
+            $(this).attr('src', $(this).attr('response.data[i].images.fixed_height_still'));
+            $(this).attr('imageState', 'still');
+          }
+          });
 
         });
 
