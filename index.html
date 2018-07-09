@@ -43,7 +43,7 @@
         var character = $(this).attr("data-person");
         //console.log(character);
 
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=hzRKbzlnVxEBc55O441l74nT3BqCTqw9&limit=10";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + character + "&api_key=hzRKbzlnVxEBc55O441l74nT3BqCTqw9&limit=10";
         //console.log(queryURL);
 
         // I was able to get the gifs to show within the console itself, but was not able to get the gifs to show on screen.
@@ -130,7 +130,7 @@
         event.preventDefault();
 
         // We are creating a variable to store the value of the character input. 
-        var character = $("#character-input").val().trim();
+        var character = $("#character-input ").val().trim();
 
         // We are putting the character name into the character array that we set up beforehand. 
         characters.push(character);
